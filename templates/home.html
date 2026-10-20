@@ -1,12 +1,22 @@
 {% extends "base.html" %} 
+{% load crispy_forms_tags %}
 {% block title %}Home{% endblock title %} 
 {% block content %} 
 {% if user.is_authenticated %} 
-Hi {{ user.username }}! You are {{ user.age }} years old.
+Hi {{ user.name }}!
+
+<!-- Form for changing avaliability for signed in TA's -->
+<form method="post" action="{% url 'home' %}">
+  {% csrf_token %}
+  {{ availability_form|crispy }}
+  <button class="btn btn-primary" type="submit">Save availability</button>
+</form>
+
 <form action="{% url 'logout' %}" method="post"> 
   {% csrf_token %} 
   <button type="submit">Log Out</button>
 </form> 
+
 {% else %} 
 <p class="mt-4">You are not logged in</p>
 <a class="text-dark" href="{% url 'login' %}">Log In</a> |
@@ -16,7 +26,7 @@ Hi {{ user.username }}! You are {{ user.age }} years old.
 <table class="table">
   <thead>
     <tr>
-      <th>Name</th>
+      <th>TA</th>
       <th>Course</th>
       <th>Days Avaliable</th>
       <th>Tutoring Hours</th>
@@ -26,7 +36,7 @@ Hi {{ user.username }}! You are {{ user.age }} years old.
     <!-- For loop to iterate over each user -->
     {% for person in users %}
     <tr>
-      <td>{{ person.name }}</td>
+      <td><a href="{% url 'ta_detail' person.name %}">{{ person.name }}</a></td>
       <td>{{ person.course }}</td>
       <td>{{ person.day }}</td>
       <td>{{ person.hours }}</td>

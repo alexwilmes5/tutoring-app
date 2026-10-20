@@ -1,0 +1,11 @@
+<!-- Details for each TA -->
+{% extends "base.html" %}
+
+{% block title %}{{ ta.name }}{% endblock title %}
+
+{% block content %}
+<h1>{{ ta.name }}</h1>
+<p>Course: {{ ta.course }}</p>
+<p>Days available: {{ ta.day }}</p>
+<p>Tutoring hours: {{ ta.hours }}</p>
+{% endblock content %}
