@@ -2,48 +2,68 @@
 {% load crispy_forms_tags %}
 {% block title %}Home{% endblock title %} 
 {% block content %} 
+
+<div class="container mt-5 pt-2">
+
 {% if user.is_authenticated %} 
-Hi {{ user.name }}!
+<h4 class="mb-4 fw-bold">Hi {{ user.name }}!</h4>
 
 <!-- Form for changing avaliability for signed in TA's -->
-<form method="post" action="{% url 'home' %}">
-  {% csrf_token %}
-  {{ availability_form|crispy }}
-  <button class="btn btn-primary" type="submit">Save availability</button>
-</form>
-
-<form action="{% url 'logout' %}" method="post"> 
-  {% csrf_token %} 
-  <button type="submit">Log Out</button>
-</form> 
+<form method="post" action="{% url 'home' %}" class="mb-5 shadow-sm p-4 bg-white rounded border">
+    {% csrf_token %}
+    {{ availability_form|crispy }}
+    <button class="btn btn-primary mt-2" type="submit">Save availability</button>
+  </form>
+  
+  <!-- Logout Form -->
+  <form action="{% url 'logout' %}" method="post" class="mb-5"> 
+    {% csrf_token %} 
+    <button type="submit" class="btn btn-outline-danger btn-sm">Log Out</button>
+  </form> 
 
 {% else %} 
-<p class="mt-4">You are not logged in</p>
-<a class="text-dark" href="{% url 'login' %}">Log In</a> |
-<a class="text-dark" href="{% url 'signup' %}">Sign Up</a> 
-{% endif %} 
+    <!-- Styled anonymous user block -->
+    <div class="card p-4 text-center shadow-sm border-0 my-5 bg-white">
+      <p class="fs-5 text-secondary">You are not logged in</p>
+      <div>
+        <a class="btn btn-primary px-4 me-2" href="{% url 'login' %}">Log In</a>
+        <a class="btn btn-outline-dark px-4" href="{% url 'signup' %}">Sign Up</a>
+      </div>
+    </div>
+  {% endif %} 
+
 <!-- Display table -->
-<table class="table">
-  <thead>
-    <tr>
-      <th>TA</th>
-      <th>Course</th>
-      <th>Days Avaliable</th>
-      <th>Tutoring Hours</th>
-    </tr>
-  </thead>
-  <tbody>
+ <div class="card shadow-sm border-0 overflow-hidden mb-5">
+    <div class="table-responsive">
+      <table class="table table-hover table-striped mb-0 align-middle">
+        <thead class="table-light">
+          <tr>
+            <th class="ps-4 py-3">TA</th>
+            <th class="py-3">Course</th>
+            <th class="py-3">Days Available</th>
+            <th class="pe-4 py-3">Tutoring Hours</th>
+          </tr>
+        </thead>
+        <tbody>
     <!-- For loop to iterate over each user -->
-    {% for person in users %}
-    <tr>
-      <td><a href="{% url 'ta_detail' person.name %}">{{ person.name }}</a></td>
-      <td>{{ person.course }}</td>
-      <td>{{ person.day }}</td>
-      <td>{{ person.hours }}</td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="2">No users found.</td></tr>
-    {% endfor %}
-  </tbody>
-</table>
+        {% for person in users %}
+        <tr>
+          <td class="ps-4 py-3">
+            <a class="fw-semibold text-decoration-none" href="{% url 'ta_detail' person.name %}">
+              {{ person.name }}
+            </a>
+          </td>
+          <td class="py-3"><span class="badge bg-secondary px-2.5 py-1.5">{{ person.course }}</span></td>
+          <td class="py-3">{{ person.day }}</td>
+          <td class="pe-4 py-3 text-secondary">{{ person.hours }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="text-center py-4 text-secondary">No users found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock content %}
