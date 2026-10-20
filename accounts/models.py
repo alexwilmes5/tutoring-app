@@ -3,3 +3,8 @@ from django.db import models
 
 class CustomUser(AbstractUser):
     age = models.PositiveIntegerField(null=True, blank=True)
+    # Include course field, name and day
+    course = models.CharField(max_length=100)
+    name = models.CharField(null = True, max_length=100)
+    hours = models.CharField(null = True, max_length=100)
+    day = models.CharField(null = True, max_length=100)
